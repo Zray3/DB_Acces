@@ -18,6 +18,11 @@ public class TestDB {
         empleado = db.getEmpleado("2X");
         System.out.println(empleado);
 
+        empleado.setApellidos("rosillo");
+        empleado.setNombre("xavier");
+        db.updateEmpleado(empleado);
+        System.out.println(empleado);
+
 
     }
 }

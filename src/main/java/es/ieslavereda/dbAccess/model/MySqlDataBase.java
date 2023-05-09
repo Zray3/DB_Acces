@@ -50,4 +50,28 @@ public class MySqlDataBase implements AlmacenDatosDB{
         }
         return empleado;
     }
+
+    @Override
+    public boolean updateEmpleado(Empleado empleado) {
+        boolean actualizado = false;
+        DataSource ds = Conector.getMySQLDataSource();
+        
+        try(Connection connection = ds.getConnection();
+             Statement statement = connection.createStatement();) {
+
+            String query = "UPDATE empleado SET nombre=\""+empleado.getNombre()+"\", "+
+                    "apellidos=\""+empleado.getApellidos()+"\","+
+                    "domicilio=\""+empleado.getDomicilio()+"\","+
+                    "CP=\""+empleado.getCP()+"\","+
+                    "email=\""+empleado.getEmail()+"\","+
+                    "fechaNac=\""+empleado.getFechaNac()+"\","+
+                    "cargo=\""+empleado.getCargo()+"\" "+
+                    "WHERE DNI=\"" + empleado.getDNI() +"\"";
+            statement.executeUpdate(query);
+
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        return actualizado;
+    }
 }
