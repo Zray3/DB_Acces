@@ -31,4 +31,23 @@ public class MySqlDataBase implements AlmacenDatosDB{
 
         return empleados;
     }
+
+    @Override
+    public Empleado getEmpleado(String DNI) {
+        Empleado empleado = null;
+        DataSource ds = Conector.getMySQLDataSource();
+
+        try(Connection con = ds.getConnection();
+            Statement statement = con.createStatement();
+            ResultSet rs = statement.executeQuery("select * from empleado where DNI = '" + DNI + "';");){
+            if(rs.next()){
+                empleado = new Empleado(rs.getInt("id"),rs.getString("DNI"),
+                        rs.getString(3),rs.getString(4),rs.getString(5),rs.getString(6),
+                        rs.getString("email"), rs.getDate(8),rs.getString(9));
+            }
+        } catch (SQLException exception){
+            exception.printStackTrace();
+        }
+        return empleado;
+    }
 }

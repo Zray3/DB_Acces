@@ -13,5 +13,11 @@ public class TestDB {
         List<Empleado> empleados = db.getEmpleados();
         System.out.println(empleados);
 
+        Empleado empleado = db.getEmpleado("2Y");
+        System.out.println(empleado);
+        empleado = db.getEmpleado("2X");
+        System.out.println(empleado);
+
+
     }
 }

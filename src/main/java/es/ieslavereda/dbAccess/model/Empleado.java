@@ -71,6 +71,7 @@ public class Empleado {
     public String toString() {
         return "Empleado{" +
                 "idEmpleado=" + idEmpleado +
+                ", DNI='" + DNI + '\'' +
                 ", nombre='" + nombre + '\'' +
                 ", apellidos='" + apellidos + '\'' +
                 ", CP='" + CP + '\'' +
@@ -79,6 +80,6 @@ public class Empleado {
                 ", cargo='" + cargo + '\'' +
                 ", password='" + password + '\'' +
                 ", fechaNac=" + fechaNac +
-                '}';
+                '}' + "\n";
     }
 }
