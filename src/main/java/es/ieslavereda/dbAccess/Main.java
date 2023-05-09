@@ -1,3 +1,7 @@
+package es.ieslavereda.dbAccess;
+
+import es.ieslavereda.dbAccess.model.Conector;
+
 import javax.sql.DataSource;
 import java.sql.Connection;
 
@@ -5,12 +9,11 @@ public class Main {
     public static void main(String[] args) {
 
         // Con la clase antigua
-//        ConectorDM.conectarOracle();
-//        ConectorDM.conectarMySQL();
+        es.ieslavereda.dbAccess.model.ConectorDM.conectarOracle();
+        es.ieslavereda.dbAccess.model.ConectorDM.conectarMySQL();
 
         Connection connection = null;
         try{
-//            DataSource dataSource = Conector.getMySQLDataSource();
             DataSource dataSource = Conector.getMyOracleDataSource();
             connection = dataSource.getConnection();
             if (connection != null)
