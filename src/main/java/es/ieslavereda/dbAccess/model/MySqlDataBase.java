@@ -1,5 +1,7 @@
 package es.ieslavereda.dbAccess.model;
 
+import com.mysql.cj.jdbc.MysqlDataSource;
+
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -52,8 +54,8 @@ public class MySqlDataBase implements AlmacenDatosDB{
     }
 
     @Override
-    public boolean updateEmpleado(Empleado empleado) {
-        boolean actualizado = false;
+    public int updateEmpleado(Empleado empleado) {
+        int actualizados=0;
         DataSource ds = Conector.getMySQLDataSource();
         
         try(Connection connection = ds.getConnection();
@@ -67,11 +69,74 @@ public class MySqlDataBase implements AlmacenDatosDB{
                     "fechaNac=\""+empleado.getFechaNac()+"\","+
                     "cargo=\""+empleado.getCargo()+"\" "+
                     "WHERE DNI=\"" + empleado.getDNI() +"\"";
-            statement.executeUpdate(query);
+            actualizados = statement.executeUpdate(query);
+
 
         } catch (Exception e){
             e.printStackTrace();
         }
-        return actualizado;
+        return actualizados;
+    }
+
+    @Override
+    public int deleteEmpleado(String dni) {
+        int actualizados=0;
+        DataSource ds = Conector.getMySQLDataSource();
+
+        try(Connection connection = ds.getConnection();
+            Statement statement = connection.createStatement();){
+
+            String query = "DELETE FROM empleado WHERE DNI = '" + dni + "'";
+            actualizados = statement.executeUpdate(query);
+
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
+
+        return actualizados;
+    }
+
+    @Override
+    public Empleado addEmpleado(Empleado empleado) {
+        int actualizados=0;
+        DataSource ds = Conector.getMySQLDataSource();
+
+        try(Connection connection = ds.getConnection();
+            Statement statement = connection.createStatement();){
+
+            String query = "INSERT INTO EMPLEADO(DNI, nombre, apellidos, domicilio, CP," +
+                  " email, fechaNac, cargo, password) VALUES (" +
+                    "'" + empleado.getDNI() + "','" + empleado.getNombre() +
+                    "','" + empleado.getApellidos() +
+                    "','" + empleado.getDomicilio() + "','" + empleado.getCP() +
+                    "','" + empleado.getEmail() +
+                    "','" + empleado.getFechaNac() + "','" + empleado.getCargo() +
+                    "','" + empleado.getPassword()+"');";
+            actualizados = statement.executeUpdate(query);
+
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
+        return empleado;
+    }
+
+    @Override
+    public boolean authenticate(String login, String passwd) {
+        boolean auth = false;
+        String sql = "SELECT COUNT(*) FROM EMPLEADO WHERE " +
+                "EMAIL=\"" + login + "\" AND PASSWOD =\"" + passwd+"\"";
+        DataSource ds = Conector.getMySQLDataSource();
+        try(Connection con = ds.getConnection();
+            Statement statement = con.createStatement();
+            ResultSet rs = statement.executeQuery(sql)){
+
+            rs.next();
+            int count = rs.getInt(1);
+            auth = (count==0)?false:true;
+
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
+        return auth;
     }
 }

@@ -22,6 +22,9 @@ public class TestDB {
         empleado.setNombre("xavier");
         db.updateEmpleado(empleado);
         System.out.println(empleado);
+        System.out.println(db.deleteEmpleado("2Y"));
+        System.out.println(db.deleteEmpleado("2X"));
+
 
 
     }

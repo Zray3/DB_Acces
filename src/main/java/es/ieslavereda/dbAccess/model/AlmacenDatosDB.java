@@ -5,7 +5,10 @@ import java.util.ArrayList;
 public interface AlmacenDatosDB {
     public ArrayList<Empleado> getEmpleados();
     public Empleado getEmpleado(String DNI);
-    public boolean updateEmpleado(Empleado empleado);
-    public boolean deleteEmpleado(String dni);
+    public int updateEmpleado(Empleado empleado);
+    public int deleteEmpleado(String dni);
+    public Empleado addEmpleado(Empleado empleado);
+    public boolean authenticate (String login, String passwd);
+
 
 }
