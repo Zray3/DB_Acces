@@ -3,10 +3,7 @@ package es.ieslavereda.dbAccess.model;
 import com.mysql.cj.jdbc.MysqlDataSource;
 
 import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 
 public class MySqlDataBase implements AlmacenDatosDB{
@@ -38,10 +35,14 @@ public class MySqlDataBase implements AlmacenDatosDB{
     public Empleado getEmpleado(String DNI) {
         Empleado empleado = null;
         DataSource ds = Conector.getMySQLDataSource();
+        String query = "select * from empleado where DNI = ?";
 
         try(Connection con = ds.getConnection();
-            Statement statement = con.createStatement();
-            ResultSet rs = statement.executeQuery("select * from empleado where DNI = '" + DNI + "';");){
+            PreparedStatement preparedStatement = con.prepareStatement(query);
+            ){
+
+            preparedStatement.setString(1,DNI);
+            ResultSet rs = preparedStatement.executeQuery();
             if(rs.next()){
                 empleado = new Empleado(rs.getInt("id"),rs.getString("DNI"),
                         rs.getString(3),rs.getString(4),rs.getString(5),rs.getString(6),
@@ -138,5 +139,32 @@ public class MySqlDataBase implements AlmacenDatosDB{
             e.printStackTrace();
         }
         return auth;
+    }
+
+    @Override
+    public ArrayList<Empleado> getEmpleadosPorCargo(String cargo) {
+        DataSource ds = Conector.getMySQLDataSource();
+        ArrayList<Empleado> empleados = new ArrayList<>();
+        String query = "select * from empleado where cargo = ?";
+
+        try(Connection connection = ds.getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(query);){
+
+            preparedStatement.setString(1, cargo);
+            ResultSet rs = preparedStatement.executeQuery();
+            Empleado empleado;
+            while(rs.next()) {
+                empleado = new Empleado(rs.getInt("id"),rs.getString("DNI"),
+                        rs.getString(3),rs.getString(4),rs.getString(5),rs.getString(6),
+                        rs.getString("email"), rs.getDate(8),rs.getString(9));
+                empleados.add(empleado);
+            }
+
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
+
+
+        return empleados;
     }
 }

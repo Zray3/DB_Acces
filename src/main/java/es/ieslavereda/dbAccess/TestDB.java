@@ -15,15 +15,17 @@ public class TestDB {
 
         Empleado empleado = db.getEmpleado("2Y");
         System.out.println(empleado);
-        empleado = db.getEmpleado("2X");
+        empleado = db.getEmpleado("3X");
         System.out.println(empleado);
 
-        empleado.setApellidos("rosillo");
-        empleado.setNombre("xavier");
-        db.updateEmpleado(empleado);
-        System.out.println(empleado);
-        System.out.println(db.deleteEmpleado("2Y"));
-        System.out.println(db.deleteEmpleado("2X"));
+//        empleado.setApellidos("rosillo");
+//        empleado.setNombre("xavier");
+//        db.updateEmpleado(empleado);
+//        System.out.println(empleado);
+//        System.out.println(db.deleteEmpleado("2Y"));
+//        System.out.println(db.deleteEmpleado("2X"));
+//        System.out.println(db.getEmpleadosPorCargo("empleado"));
+
 
 
 
