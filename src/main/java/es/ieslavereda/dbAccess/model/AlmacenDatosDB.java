@@ -7,7 +7,7 @@ public interface AlmacenDatosDB {
     public Empleado getEmpleado(String DNI);
     public int updateEmpleado(Empleado empleado);
     public int deleteEmpleado(String dni);
-    public Empleado addEmpleado(Empleado empleado);
+    public boolean addEmpleado(Empleado empleado);
     public boolean authenticate (String login, String passwd);
     public ArrayList<Empleado> getEmpleadosPorCargo(String cargo);
 
