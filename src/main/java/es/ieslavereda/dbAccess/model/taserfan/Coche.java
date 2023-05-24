@@ -13,6 +13,7 @@ public class Coche extends Vehiculo {
         this.numPuertas = numPuertas;
     }
 
+
     public short getNumPlazas() {
         return numPlazas;
     }
@@ -28,6 +29,7 @@ public class Coche extends Vehiculo {
     public void setNumPuertas(short numPuertas) {
         this.numPuertas = numPuertas;
     }
+
 
     @Override
     public String toString() {

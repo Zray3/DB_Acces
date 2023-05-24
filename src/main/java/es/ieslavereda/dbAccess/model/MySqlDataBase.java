@@ -20,8 +20,7 @@ public class MySqlDataBase implements AlmacenDatosDB{
                 while(rs.next()) {
                     empleado = new Empleado(rs.getInt("id"),rs.getString("DNI"),
                             rs.getString(3),rs.getString(4),rs.getString(5),rs.getString(6),
-                            rs.getString("email"), rs.getDate(8),rs.getString(9),
-                            rs.getString(10));
+                            rs.getString("email"), rs.getDate(8),rs.getString(9));
                     empleados.add(empleado);
                 }
 
@@ -99,90 +98,39 @@ public class MySqlDataBase implements AlmacenDatosDB{
     }
 
     @Override
-    public boolean addEmpleado(Empleado empleado) {
-        boolean actualizado=false;
+    public Empleado addEmpleado(Empleado empleado) {
+        int actualizados=0;
         DataSource ds = Conector.getMySQLDataSource();
-        String sql = "{ call insertarEmpleado(?,?,?,?,?,?,?,?,?) }";
 
         try(Connection connection = ds.getConnection();
-            CallableStatement cs = connection.prepareCall(sql);){
+            Statement statement = connection.createStatement();){
 
-            cs.setString(1, empleado.getDNI());
-            cs.setString(2, empleado.getNombre());
-            cs.setString(3, empleado.getApellidos());
-            cs.setString(4, empleado.getDomicilio());
-            cs.setString(5, empleado.getCP());
-            cs.setString(6, empleado.getEmail());
-            cs.setDate(7, empleado.getFechaNac());
-            cs.setString(8, empleado.getCargo());
-            cs.setString(9, empleado.getPassword());
-            actualizado = (cs.executeUpdate() == 1) ? true : false;
+            String query = "INSERT INTO EMPLEADO(DNI, nombre, apellidos, domicilio, CP," +
+                  " email, fechaNac, cargo, password) VALUES (" +
+                    "'" + empleado.getDNI() + "','" + empleado.getNombre() +
+                    "','" + empleado.getApellidos() +
+                    "','" + empleado.getDomicilio() + "','" + empleado.getCP() +
+                    "','" + empleado.getEmail() +
+                    "','" + empleado.getFechaNac() + "','" + empleado.getCargo() +
+                    "','" + empleado.getPassword()+"');";
+            actualizados = statement.executeUpdate(query);
 
         } catch (SQLException e){
             e.printStackTrace();
         }
-        return actualizado;
+        return empleado;
     }
-
-//    @Override
-//    public Empleado addEmpleado(Empleado empleado) {
-//        int actualizados=0;
-//        DataSource ds = Conector.getMySQLDataSource();
-//
-//        try(Connection connection = ds.getConnection();
-//            Statement statement = connection.createStatement();){
-//
-//            String query = "INSERT INTO EMPLEADO(DNI, nombre, apellidos, domicilio, CP," +
-//                    " email, fechaNac, cargo, password) VALUES (" +
-//                    "'" + empleado.getDNI() + "','" + empleado.getNombre() +
-//                    "','" + empleado.getApellidos() +
-//                    "','" + empleado.getDomicilio() + "','" + empleado.getCP() +
-//                    "','" + empleado.getEmail() +
-//                    "','" + empleado.getFechaNac() + "','" + empleado.getCargo() +
-//                    "','" + empleado.getPassword()+"');";
-//            actualizados = statement.executeUpdate(query);
-//
-//        } catch (SQLException e){
-//            e.printStackTrace();
-//        }
-//        return empleado;
-//    }
-
-//    @Override
-//    public boolean authenticate(String login, String passwd) {
-//        boolean auth = false;
-//        String sql = "SELECT COUNT(*) FROM empleado WHERE " +
-//                "EMAIL= ? AND PASSWORD = ? ";
-//        DataSource ds = Conector.getMySQLDataSource();
-//        try(Connection con = ds.getConnection();
-//            PreparedStatement preparedStatement = con.prepareStatement(sql);
-//            ){
-//            preparedStatement.setString(1,login);
-//            preparedStatement.setString(2,passwd);
-//            ResultSet rs = preparedStatement.executeQuery();
-//            rs.next();
-//            int count = rs.getInt(1);
-//            auth = (count==0)?false:true;
-//
-//        } catch (SQLException e){
-//            e.printStackTrace();
-//        }
-//        return auth;
-//    }
 
     @Override
     public boolean authenticate(String login, String passwd) {
         boolean auth = false;
-        String sql = " { ? = call authenticate(?,?) }";
+        String sql = "SELECT COUNT(*) FROM EMPLEADO WHERE " +
+                "EMAIL=\"" + login + "\" AND PASSWOD =\"" + passwd+"\"";
         DataSource ds = Conector.getMySQLDataSource();
         try(Connection con = ds.getConnection();
-            CallableStatement cs = con.prepareCall(sql);
-        ){
+            Statement statement = con.createStatement();
+            ResultSet rs = statement.executeQuery(sql)){
 
-            cs.setString(2,login);
-            cs.setString(3,passwd);
-
-            ResultSet rs = cs.executeQuery();
             rs.next();
             int count = rs.getInt(1);
             auth = (count==0)?false:true;
@@ -193,46 +141,17 @@ public class MySqlDataBase implements AlmacenDatosDB{
         return auth;
     }
 
-//    @Override
-//    public ArrayList<Empleado> getEmpleadosPorCargo(String cargo) {
-//        DataSource ds = Conector.getMySQLDataSource();
-//        ArrayList<Empleado> empleados = new ArrayList<>();
-//        String query = "select * from empleado where cargo = ?";
-//
-//        try(Connection connection = ds.getConnection();
-//            PreparedStatement preparedStatement = connection.prepareStatement(query);){
-//
-//            preparedStatement.setString(1, cargo);
-//            ResultSet rs = preparedStatement.executeQuery();
-//            Empleado empleado;
-//            while(rs.next()) {
-//                empleado = new Empleado(rs.getInt("id"),rs.getString("DNI"),
-//                        rs.getString(3),rs.getString(4),rs.getString(5),rs.getString(6),
-//                        rs.getString("email"), rs.getDate(8),rs.getString(9));
-//                empleados.add(empleado);
-//            }
-//
-//        } catch (SQLException e){
-//            e.printStackTrace();
-//        }
-//
-//
-//        return empleados;
-//    }
-
     @Override
     public ArrayList<Empleado> getEmpleadosPorCargo(String cargo) {
         DataSource ds = Conector.getMySQLDataSource();
         ArrayList<Empleado> empleados = new ArrayList<>();
-        String query = "{ call empleadoPorCargo(?)} ";
+        String query = "select * from empleado where cargo = ?";
 
         try(Connection connection = ds.getConnection();
-            CallableStatement cs = connection.prepareCall(query)){
+            PreparedStatement preparedStatement = connection.prepareStatement(query);){
 
-            //antes de ejecutar
-            cs.setString(1,cargo);
-            ResultSet rs = cs.executeQuery();
-
+            preparedStatement.setString(1, cargo);
+            ResultSet rs = preparedStatement.executeQuery();
             Empleado empleado;
             while(rs.next()) {
                 empleado = new Empleado(rs.getInt("id"),rs.getString("DNI"),
@@ -248,7 +167,4 @@ public class MySqlDataBase implements AlmacenDatosDB{
 
         return empleados;
     }
-
-
-
 }

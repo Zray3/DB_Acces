@@ -10,7 +10,7 @@ public class Cliente {
     private final String apellidos;
     private final String domicilio;
     private final String CP;
-    private final String email;
+    private final String Email;
     private final Date fechaNac;
     private final short idCarnet;
     private Blob foto;
@@ -21,7 +21,7 @@ public class Cliente {
         this.apellidos = apellidos;
         this.domicilio = domicilio;
         this.CP = CP;
-        this.email = email;
+        Email = email;
         this.fechaNac = fechaNac;
         this.idCarnet = idCarnet;
     }
@@ -59,7 +59,7 @@ public class Cliente {
     }
 
     public String getEmail() {
-        return email;
+        return Email;
     }
 
     public Date getFechaNac() {
@@ -87,7 +87,7 @@ public class Cliente {
                 ", apellidos='" + apellidos + '\'' +
                 ", domicilio='" + domicilio + '\'' +
                 ", CP='" + CP + '\'' +
-                ", Email='" + email + '\'' +
+                ", Email='" + Email + '\'' +
                 ", fechaNac=" + fechaNac +
                 ", idCarnet=" + idCarnet +
                 " \n";

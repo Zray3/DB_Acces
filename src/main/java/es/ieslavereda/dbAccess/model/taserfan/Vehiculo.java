@@ -4,7 +4,7 @@ import java.sql.Date;
 
 public class Vehiculo {
 
-    private String matricula;
+    private final String matricula;
     private final double precioHora;
     private final String marca;
     private final String descripcion;
@@ -60,10 +60,6 @@ public class Vehiculo {
 
     public String getIdCarnet() {
         return idCarnet;
-    }
-
-    public void setMatricula(String matricula) {
-        this.matricula = matricula;
     }
 
     @Override
